@@ -2,6 +2,7 @@ package com.mitv.videoplayer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -40,14 +41,25 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     1);
         }
 
-        OnMediaLoadCompletion playLoadedEntry = new OnMediaLoadCompletion() {
+//        startPlaykitPlaying();
+        startLivePlaying();
+    }
+
+    private void startLivePlaying() {
+        String uri = "http://kuai.xl.ptxl.gitv.tv/30/30/3030BE7A7DC0EADE2116E4892B38E6F4.mp4?timestamp=1501486582&sign=5d1f65eb41c5b5e80aa0aeb31bd3dee6";
+        onMediaLoaded(uri, null);
+    }
+
+    private void startPlaykitPlaying() {
+        MockMediaProvider mediaProvider = new MockMediaProvider("mock/entries.playkit.json", getApplicationContext(), "hls");
+        mediaProvider.load(new OnMediaLoadCompletion() {
             @Override
             public void onComplete(final ResultElement<PKMediaEntry> response) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (response.isSuccess()) {
-                            onMediaLoaded(response.getResponse());
+                            onMediaLoaded(null, response.getResponse());
                         } else {
 
                             Toast.makeText(VideoPlayerActivity.this, "failed to fetch media data: " + (response.getError() != null ? response.getError().getMessage() : ""), Toast.LENGTH_LONG).show();
@@ -56,26 +68,26 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     }
                 });
             }
-        };
-
-        startMockMediaLoading(playLoadedEntry);
-    }
-
-    private void startMockMediaLoading(OnMediaLoadCompletion completion) {
-        MockMediaProvider mediaProvider = new MockMediaProvider("mock/entries.playkit.json", getApplicationContext(), "hls");
-        mediaProvider.load(completion);
+        });
     }
     
-    private void onMediaLoaded(PKMediaEntry mediaEntry) {
-        mVideoView = new VideoViewWrapper(getApplicationContext(), "voot");
-        mVideoView.setMediaEntry(mediaEntry);
+    private void onMediaLoaded(String uri, PKMediaEntry mediaEntry) {
+        String cp = "live";
+        if (mediaEntry != null) {
+            cp = "voot";
+        }
+        mVideoView = new VideoViewWrapper(getApplicationContext(), cp);
+        if (mediaEntry != null) {
+            mVideoView.setMediaEntry(mediaEntry);
+        } else {
+            mVideoView.setVideoUri(Uri.parse(uri), null);
+        }
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.player_root);
         layout.addView(mVideoView.getView());
 
         controlsView = (TvControlsView) this.findViewById(R.id.playerControls);
         controlsView.setVideoView(mVideoView);
-
     }
 
     @Override

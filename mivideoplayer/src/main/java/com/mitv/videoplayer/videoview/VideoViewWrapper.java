@@ -27,6 +27,8 @@ public class VideoViewWrapper implements IVideoView, ILifeCycle{
         switch (cp) {
             case "voot":
                 return new PlaykitVideoView(mContext);
+            case "live":
+                return new LiveVideoView(mContext);
             default:
                 return null;
         }
