@@ -66,7 +66,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         mediaProvider.load(completion);
     }
     
-        private void onMediaLoaded(PKMediaEntry mediaEntry) {
+    private void onMediaLoaded(PKMediaEntry mediaEntry) {
         mVideoView = new VideoViewWrapper(getApplicationContext(), "voot");
         mVideoView.setMediaEntry(mediaEntry);
 
@@ -86,7 +86,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
             controlsView.pause();
         }
         if (mVideoView != null) {
-//            mVideoView.onApplicationPaused();
+            mVideoView.onApplicationPaused();
         }
     }
 
@@ -96,7 +96,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         Log.d(TAG, "onResume");
         super.onResume();
         if (mVideoView != null) {
-//            mVideoView.onApplicationResumed();
+            mVideoView.onApplicationResumed();
             if (mVideoView.isPlaying() && AUTO_PLAY_ON_RESUME) {
                 mVideoView.start();
             }

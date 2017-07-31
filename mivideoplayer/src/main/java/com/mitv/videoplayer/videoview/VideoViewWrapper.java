@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by chengsl on 7/28/17.
  */
 
-public class VideoViewWrapper implements IVideoView{
+public class VideoViewWrapper implements IVideoView, ILifeCycle{
     private final Context mContext;
     private String mCp;
     private IVideoView mImp;
@@ -186,6 +186,20 @@ public class VideoViewWrapper implements IVideoView{
     public void setAccountInfo(String accountType, String accountToken) {
         if (mImp != null) {
             mImp.setAccountInfo(accountType, accountToken);
+        }
+    }
+
+    @Override
+    public void onApplicationPaused() {
+        if (mImp instanceof PlaykitVideoView && ((PlaykitVideoView) mImp).getPlayer() != null) {
+            ((PlaykitVideoView) mImp).getPlayer().onApplicationPaused();
+        }
+    }
+
+    @Override
+    public void onApplicationResumed() {
+        if (mImp instanceof PlaykitVideoView && ((PlaykitVideoView) mImp).getPlayer() != null) {
+            ((PlaykitVideoView) mImp).getPlayer().onApplicationResumed();
         }
     }
 }

@@ -60,6 +60,10 @@ class PlaykitVideoView implements IVideoView {
         return mPlayer != null ? mPlayer.getView() : null;
     }
 
+    public Player getPlayer() {
+        return mPlayer;
+    }
+
     @Override
     public int getVideoWidth() {
         return 0;
