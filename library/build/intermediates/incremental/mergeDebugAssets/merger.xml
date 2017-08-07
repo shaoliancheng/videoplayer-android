@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/media/chengsl/extend/mitv/code/videoplayer-android-tv/library/src/main/assets"/><source path="/media/chengsl/extend/mitv/code/videoplayer-android-tv/library/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/media/chengsl/extend/mitv/code/videoplayer-android-tv/library/src/debug/assets"/></dataSet></merger>

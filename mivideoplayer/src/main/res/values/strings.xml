@@ -17,4 +17,7 @@
     <string name="video">Video</string>
     <string name="audio">Audio</string>
     <string name="cc">CC</string>
+
+    // for hungama
+    <string name="sender_id">XXXXY</string>
 </resources>

@@ -1,1 +1,1 @@
-include ':playkit', ':mivideoplayer'
+include ':playkit', ':mivideoplayer', ':CastCompanionLibrary', ':library'

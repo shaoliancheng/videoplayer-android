@@ -11,11 +11,15 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.hungama.movies.sdk.Utils.VideoPlayingType;
 import com.kaltura.netkit.connect.response.ResultElement;
 import com.kaltura.playkit.PKMediaEntry;
 import com.kaltura.playkit.mediaproviders.base.OnMediaLoadCompletion;
 import com.kaltura.playkit.mediaproviders.mock.MockMediaProvider;
 import com.mitv.videoplayer.videoview.VideoViewWrapper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by chengsl on 7/28/17.
@@ -42,12 +46,25 @@ public class VideoPlayerActivity extends AppCompatActivity {
         }
 
 //        startPlaykitPlaying();
-        startLivePlaying();
+//        startLivePlaying();
+        startHungamaPlaying();
+    }
+
+    private void startHungamaPlaying() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("contentId", "18261833");
+            json.put("playingType", VideoPlayingType.MOVIE.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        onMediaLoaded("hungama", json.toString(), null);
     }
 
     private void startLivePlaying() {
         String uri = "http://kuai.xl.ptxl.gitv.tv/30/30/3030BE7A7DC0EADE2116E4892B38E6F4.mp4?timestamp=1501486582&sign=5d1f65eb41c5b5e80aa0aeb31bd3dee6";
-        onMediaLoaded(uri, null);
+        onMediaLoaded("live", uri, null);
     }
 
     private void startPlaykitPlaying() {
@@ -59,7 +76,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (response.isSuccess()) {
-                            onMediaLoaded(null, response.getResponse());
+                            onMediaLoaded("playkit", null, response.getResponse());
                         } else {
 
                             Toast.makeText(VideoPlayerActivity.this, "failed to fetch media data: " + (response.getError() != null ? response.getError().getMessage() : ""), Toast.LENGTH_LONG).show();
@@ -71,16 +88,16 @@ public class VideoPlayerActivity extends AppCompatActivity {
         });
     }
     
-    private void onMediaLoaded(String uri, PKMediaEntry mediaEntry) {
-        String cp = "live";
-        if (mediaEntry != null) {
-            cp = "voot";
-        }
-        mVideoView = new VideoViewWrapper(getApplicationContext(), cp);
-        if (mediaEntry != null) {
-            mVideoView.setMediaEntry(mediaEntry);
-        } else {
-            mVideoView.setVideoUri(Uri.parse(uri), null);
+    private void onMediaLoaded(String cp, String uri, PKMediaEntry mediaEntry) {
+        mVideoView = new VideoViewWrapper(this, cp);
+        switch (cp) {
+            case "playkit":
+                mVideoView.setMediaEntry(mediaEntry);
+                break;
+            case "hungama":
+            case "live":
+                mVideoView.setVideoUri(Uri.parse(uri), null);
+                break;
         }
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.player_root);
@@ -118,4 +135,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+        if (mVideoView != null) {
+            mVideoView.stopPlayback();
+        }
+    }
 }

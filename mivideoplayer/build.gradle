@@ -5,11 +5,12 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId "com.kaltura.playkitdemo"
+        applicationId "com.mitv.videoplayer"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -21,13 +22,38 @@ android {
 
 repositories {
     jcenter()
+    flatDir {
+        dirs 'aars'
+    }
     maven { url "https://jitpack.io" }
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
 }
 
 dependencies {
-    compile project(path: ':playkit')
+    compile project(':playkit')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.github.kaltura:playkit-dtg-android:v2.0.0.+'
 
+    // for hungama
+    compile(name: 'cmsdkCore-1.0.2.5-pa-spa', ext: 'aar')
+
+//    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+//        transitive = true;
+//    }
+
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.google.android.gms:play-services-cast:8.4.0'
+
+//    compile 'com.google.android.exoplayer:exoplayer:r2.3.1'
+    compile project(':library')
+
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+
+    compile project(':CastCompanionLibrary')
+    compile(name: 'MoviePlayerSDK_V1.2.34', ext: 'aar')
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:design:25.0.1'
 }

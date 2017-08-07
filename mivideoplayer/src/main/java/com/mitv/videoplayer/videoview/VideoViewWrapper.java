@@ -25,10 +25,12 @@ public class VideoViewWrapper implements IVideoView, ILifeCycle{
 
     private IVideoView createVideoViewImp(String cp) {
         switch (cp) {
-            case "voot":
-                return new PlaykitVideoView(mContext);
             case "live":
                 return new LiveVideoView(mContext);
+            case "playkit":
+                return new PlaykitVideoView(mContext);
+            case "hungama":
+                return new HungamaVideoView(mContext);
             default:
                 return null;
         }
